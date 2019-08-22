@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content>
+    <meta name="author" content="John Doe">
+    <meta name="keywords" content>
+    <title>文章翻译 ~ Hexo</title>
+    <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css?v=5.7.2">
+    <link rel="stylesheet" href="/lib/mdbootstrap/css/bootstrap.min.css?v=4.3.1">
+    <link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css?v=4.8.7">
+    <link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css?v=0.2.0">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+    
+        <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+    
+    <link rel="stylesheet" href="/css/main.css">
+
+    
+</head>
+
+
+<body>
+<header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+<div class="container">
+    <a class="navbar-brand" href="/">&nbsp;<strong>Hexo</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto text-center">
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/archives/">Archives</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/categories/">Categories</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/tags/">Tags</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/about/">About</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+</nav>
+    <div class="view intro-2"
+         style="background: url('/img/post.jpg')no-repeat center center;background-size: cover;">
+        <div class="full-bg-img">
+            <div class="mask rgba-black-light flex-center">
+                <div class="container text-center white-text wow fadeInUp">
+                    <span class="h2" id="subtitle">
+                        
+                    </span>
+                    
+                        <br>
+                        <p>Wednesday, August 21st 2019, 5:01 pm</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    
+        
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="d-none d-lg-block col-lg-2"></div>
+            <div class="col-lg-8 nopadding-md">
+                <div class="py-5 z-depth-3 board">
+                    <div class="post-content mx-auto">
+                        <div class="markdown-body">
+                            <p><strong>这是我的第一篇博客，决定先翻译一篇文章练练手，正好接下来要做音频生成的项目，就决定翻译一下DeepMind一篇关于WaveNet的博客。</strong><br><strong>这是原文的<a href="https://deepmind.com/blog/article/wavenet-generative-model-raw-audio" target="_blank" rel="noopener">地址</a>。</strong>  </p>
+<p>这篇文章介绍了WaveNet，一种原始音频波形的深度生成模型。我们展示了WaveNets可生成模仿任何人类声音的语音，它听起来比现存的最先进的语音合成(Text-to-Speech)系统更自然,这使得机器与人类表现的差距缩小了50%以上。<br>我们也证明了同样的网络架构可被用来合成其他音频信号，如音乐，我们展示了一些在自动生成钢琴片段上的出色样本。  </p>
+<p>##会说话的机器<br>使得人能与机器交流是一个长久以来的关于人机交互的梦想。由于深度神经网络的使用，机器在理解自然语言上的能力在过去几年有了革命性的进步(例如,谷歌语音搜索)。然而，用计算机产生语音——通常被称为语音合成(speech synthesis)或文本到语音(TTS)——仍然主要基于所谓的连接式TTS(concatenative TTS)，它要求记录单一的录制者大量的短语音片段来形成一个巨大的数据库，然后重新组合这些片段以形成完整的话语。这使得在没有重新录制整个新的数据库的情况下，修改声音变得十分困难(比如转换成不同的说话者，或者改变他们声音的重点或情感)。<br>这导致了对参数式TTS(parametric TTS)的迫切需求，其中生成数据所需要的所有信息都保存在模型的参数中，并且语音的内容和特征可以通过模型的输入来控制。但目前为止，参数式TTS比连接式TTS听起来更不自然。现有的参数式模型往往将输出通过名为声码器(vocoders)的信号处理算法来生成音频信号。<br>WaveNet改变了这种范例，它直接对音频信号的原始波形进行建模，一次一个样本。使用原始波形意味着，除了生成听起来更自然的声音外，WaveNet可以模拟任何音频，包括音乐。  </p>
+<p>##WaveNet<br><img src="https://lh3.googleusercontent.com/XMJlFDtiFU7WtZYnPDMDhT6jTFEXvTpY7c7sY70PtTkzEIDm6DvUv5nvHHwbOrUrDckS34aIu5fiZx0615p1-nf3rFxzhza387ud=w1440-rw-v1" alt><br>研究人员常常避免对原始音频建模，因为它的速度非常快：通常每秒有16000个或更多样本，且在许多时间尺度上具有重要结构。构建一个完全自回归(autoregressive)模型显然是一项具有挑战性的任务，其中每个样本的预测都受到先前所有样本的影响(从统计学上来说，每个预测的分布都以先前所有观察为条件)。<br>然而，我们在今年(2016年)早些时候发布的PixelRNN和PixelCNN模型显示，不仅可以通过一次生成一个像素，而且可以通过一次生成一个颜色通道，来生成复杂的自然图像，其中每幅图像需要上千次这样的预测。这促使我们将二维的PixelNets改编为一维的WaveNet。<br><img src="https://lh3.googleusercontent.com/Zy5xK_i2F8sNH5tFtRa0SjbLp_CU7QwzS2iB5nf2ijIf_OYm-Q5D0SgoW9SmfbDF97tNEF7CmxaL-o6oLC8sGIrJ5HxWNk79dL1r7Rc=w1440-rw-v1" alt><br>上面的动画显示了WaveNet是如何构建的。它是一个完全的卷积神经网络，其中卷积层具有多种扩张因子，这使得其感知场(receptive field)随着深度呈现指数增长，以此覆盖上千的步长。<br>训练时，输入序列是从记录人类声音的真实波形。训练之后，我们可以对网络采样生成合成声音。在采样的每个步骤中，我们从网络计算出的概率分布中抽取数值。将这一数值反馈到输入中，就可产生下一步的新的预测。像这样一次一步的建立样本的计算成本很高，但我们发现这对于生成复杂且逼真的音频十分重要。  </p>
+<p>##提升目前为止的最好表现<br>我们使用Google的部分TTS数据来训练WaveNet，以此来评估模型的表现。下图显示了WaveNets的性能，分数从1到5，并与Google目前最好的TTS系统(参数式和连接式的)和使用Mean Opinion Scores(MOS)的人类语音相比较。MOS是用于主观声音质量测试的标准，获取自人类受测试者的盲评(来自100个测试句子的500多个评级)。正如我们看到的，WaveNets使得美式英语和普通话的最好表现与人类表现间的差距缩小了50%以上。<br>对于中文和英文，Google目前的TTS系统被认为是全球最先进的系统之一，因此使用单一模型就能对二者进行改进是一项巨大的成就。<br><img src="https://lh3.googleusercontent.com/gvNa8TrRd18cG-VWJndWqwIOHXA933mR-ebwwdj-jkZLv1AFpZ3W0jOpwN9UzJnEpvzqCHLvMxDCM5T0XfwV9m0WVlYCf13BSsbLlsA=w1440-rw-v1" alt><br><strong>下面是一些生成样本，感兴趣的可以移步原博客。</strong>  </p>
+<p>##知道自己在说什么<br>为了使用WaveNet将文本变成语音，我们必须告诉它文本是什么。我们将文本转换成一系列语言和语音特征(包含有关当前音素、音节、单词等的信息)，并将其输入WaveNet来实现文本的转换。这意味着网络的预测不仅取决于先前的音频样本，还取决于我们希望它说出的文本。<br>如果我们在没有文本序列的情况下训练网络，它仍会生成语音，但是现在它必须决定要说的内容。正如你可以从以下的样本中听到的那样，这会产生一种咿呀声，其中真实的单词中散布着类似于单词的声音。(感兴趣的可以移步原博客听一下样本)<br>我们注意到WaveNet有时也会产生非语音，如呼吸和嘴巴动作，这反映了原始音频模型的更大的灵活性。<br>正如你可以从这些样本中听到的，单个WaveNet能够学习许多不同声音的特征，包含男性和女性。为了确保在给定语句的情况下，模型知道使用哪种语音，我们根据说话者的身份调整网络。有趣的是，我们发现使用多个说话者训练比只使用单个说话者训练对于系统的语音模拟效果更好，这表现了一种迁移学习的形式。<br>通过更改说话者的身份，我们可以让WaveNet使用不同声音说同样的事情：<br><strong>下面是一些生成样本，感兴趣的可以移步原博客。</strong><br>同样的，我们可以为模型提供额外的输入，例如情感和口音，使得语音更加多样化和有趣。  </p>
+<p>##生成音乐<br>由于WaveNets可以用来模拟任何音频信号，我们认为尝试生成音乐也很有趣。与TTS实验不同，我们没有对输入序列进行调节，告诉它要播放什么(例如乐谱)；相反，我们只是让它生成任何它想生成的。当我们在古典音乐的数据集上进行训练后，它生成了如下的美妙的样本：<br><strong>下面是一些生成样本，感兴趣的可以移步原博客。</strong><br>WaveNets为TTS、音乐生成和音频建模提供了很多可能性。对于16kHz的音频，使用深度神经网络直接生成每一时间步长的时间步长是起作用的，这确实令人惊讶，更不用说它优于最先进的TTS系统。我们很高兴看到我们接下来可以做些什么。<br>关于更多的细节，请看我们(作者)的<a href="https://arxiv.org/pdf/1609.03499.pdf" target="_blank" rel="noopener">论文</a>。  </p>
+
+                            <hr>
+                        </div>
+                        <br>
+                        <div>
+                            
+                            <p>
+                                <i class="iconfont icon-tag"></i>
+                                
+                            </p>
+                            
+                                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="d-none d-lg-block col-lg-2 toc-container">
+            
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i> Toc:</p> 
+    <div id="tocbot"></div>
+  </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+    <div class="container comments mx-auto" id="comments">
+        
+    </div>
+</div>
+    
+</main>
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/0x2e/Material-T" target="_blank" rel="nofollow noopener"> <b>Material-T</b></a>
+    <br>
+    
+  </div>
+</footer>
+
+  <!-- SCRIPTS -->
+  <script src="/lib/mdbootstrap/js/jquery-3.4.1.min.js"></script>
+  <script src="/lib/mdbootstrap/js/popper.min.js"></script>
+  <script src="/lib/mdbootstrap/js/bootstrap.min.js?v=4.3.1"></script>
+  <script src="/lib/mdbootstrap/js/mdb.min.js?v=4.8.7"></script>
+  <script src="/lib/nprogress/nprogress.min.js?v=0.2.0"></script>
+  <script src="/js/main.js"></script>
+  
+    
+      <script src="/lib/tocbot/tocbot.min.js?v=4.7.0"></script>
+    
+    <script src="/js/post.js"></script>
+  
+  
+    <script src="/lib/prettify/prettify.min.js?v=0.1.0"></script>
+    <script>
+      $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums');
+        prettyPrint();
+      })
+    </script>
+  
+  
+    <script src="/lib/typed/typed.min.js?v=2.0.9"></script>
+    <script>
+        var typed = new Typed('#subtitle', {
+          strings: [
+            '  ',
+            "文章翻译&nbsp;",
+        ],
+        cursorChar: "_",
+        typeSpeed: 70,
+        startDelay: 300, //开始之前延迟300毫秒
+        loop: false,
+        });
+        $(".typed-cursor").addClass("h2");
+    </script>
+  
+  
+    <script src="/lib/anchor/anchor.min.js?v=4.2.0"></script>
+    <script>
+      anchors.options = {
+        placement: "right",
+        visible: "false",
+        
+      };
+      anchors.add(".post-content > h1,h2,h3,h4,h5,h6");
+    </script>
+  
+</body>
+</html>
